@@ -1,5 +1,5 @@
 INCLUDES = -I$(top_srcdir)
-noinst_PROGRAMS = verify_live enroll verify img_capture cpp-test
+noinst_PROGRAMS = verify_live enroll verify img_capture cpp-test test_driver
 
 verify_live_SOURCES = verify_live.c
 verify_live_LDADD = ../libfprint/libfprint.la
@@ -15,6 +15,9 @@ img_capture_LDADD = ../libfprint/libfprint.la
 
 cpp_test_SOURCES = cpp-test.cpp
 cpp_test_LDADD = ../libfprint/libfprint.la
+
+test_driver_SOURCES = test_driver.c
+test_driver_LDADD = ../libfprint/libfprint.la
 
 if BUILD_X11_EXAMPLES
 noinst_PROGRAMS += img_capture_continuous
