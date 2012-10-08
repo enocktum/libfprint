@@ -26,7 +26,7 @@
 #include "fp_internal.h"
 
 /* Drivers call this when device initialisation has completed */
-void fpi_drvcb_open_complete(struct fp_dev *dev, int status)
+API_INTERNAL void fpi_drvcb_open_complete(struct fp_dev *dev, int status)
 {
 	fp_dbg("status %d", status);
 	BUG_ON(dev->state != DEV_STATE_INITIALIZING);
@@ -76,7 +76,7 @@ API_EXPORTED int fp_async_dev_open(struct fp_dscv_dev *ddev, fp_dev_open_cb cb,
 }
 
 /* Drivers call this when device deinitialisation has completed */
-void fpi_drvcb_close_complete(struct fp_dev *dev)
+API_INTERNAL void fpi_drvcb_close_complete(struct fp_dev *dev)
 {
 	fp_dbg("");
 	BUG_ON(dev->state != DEV_STATE_DEINITIALIZING);
@@ -109,7 +109,7 @@ API_EXPORTED void fp_async_dev_close(struct fp_dev *dev,
 }
 
 /* Drivers call this when enrollment has started */
-void fpi_drvcb_enroll_started(struct fp_dev *dev, int status)
+API_INTERNAL void fpi_drvcb_enroll_started(struct fp_dev *dev, int status)
 {
 	fp_dbg("status %d", status);
 	BUG_ON(dev->state != DEV_STATE_ENROLL_STARTING);
@@ -155,8 +155,8 @@ API_EXPORTED int fp_async_enroll_start(struct fp_dev *dev,
 }
 
 /* Drivers call this when an enroll stage has completed */
-void fpi_drvcb_enroll_stage_completed(struct fp_dev *dev, int result,
-	struct fp_print_data *data, struct fp_img *img)
+API_INTERNAL void fpi_drvcb_enroll_stage_completed(struct fp_dev *dev,
+		int result, struct fp_print_data *data, struct fp_img *img)
 {
 	BUG_ON(dev->state != DEV_STATE_ENROLLING);
 	fp_dbg("result %d", result);
@@ -172,7 +172,7 @@ void fpi_drvcb_enroll_stage_completed(struct fp_dev *dev, int result,
 }
 
 /* Drivers call this when enrollment has stopped */
-void fpi_drvcb_enroll_stopped(struct fp_dev *dev)
+API_INTERNAL void fpi_drvcb_enroll_stopped(struct fp_dev *dev)
 {
 	fp_dbg("");
 	BUG_ON(dev->state != DEV_STATE_ENROLL_STOPPING);
@@ -235,7 +235,7 @@ API_EXPORTED int fp_async_verify_start(struct fp_dev *dev,
 }
 
 /* Drivers call this when verification has started */
-void fpi_drvcb_verify_started(struct fp_dev *dev, int status)
+API_INTERNAL void fpi_drvcb_verify_started(struct fp_dev *dev, int status)
 {
 	fp_dbg("");
 	BUG_ON(dev->state != DEV_STATE_VERIFY_STARTING);
@@ -253,7 +253,7 @@ void fpi_drvcb_verify_started(struct fp_dev *dev, int status)
 }
 
 /* Drivers call this to report a verify result (which might mark completion) */
-void fpi_drvcb_report_verify_result(struct fp_dev *dev, int result,
+API_INTERNAL void fpi_drvcb_report_verify_result(struct fp_dev *dev, int result,
 	struct fp_img *img)
 {
 	fp_dbg("result %d", result);
@@ -269,7 +269,7 @@ void fpi_drvcb_report_verify_result(struct fp_dev *dev, int result,
 }
 
 /* Drivers call this when verification has stopped */
-void fpi_drvcb_verify_stopped(struct fp_dev *dev)
+API_INTERNAL void fpi_drvcb_verify_stopped(struct fp_dev *dev)
 {
 	fp_dbg("");
 	BUG_ON(dev->state != DEV_STATE_VERIFY_STOPPING);
@@ -335,7 +335,7 @@ API_EXPORTED int fp_async_identify_start(struct fp_dev *dev,
 }
 
 /* Driver-lib: identification has started, expect results soon */
-void fpi_drvcb_identify_started(struct fp_dev *dev, int status)
+API_INTERNAL void fpi_drvcb_identify_started(struct fp_dev *dev, int status)
 {
 	fp_dbg("status %d", status);
 	BUG_ON(dev->state != DEV_STATE_IDENTIFY_STARTING);
@@ -353,8 +353,8 @@ void fpi_drvcb_identify_started(struct fp_dev *dev, int status)
 }
 
 /* Drivers report an identify result (which might mark completion) */
-void fpi_drvcb_report_identify_result(struct fp_dev *dev, int result,
-	size_t match_offset, struct fp_img *img)
+API_INTERNAL void fpi_drvcb_report_identify_result(struct fp_dev *dev,
+		int result, size_t match_offset, struct fp_img *img)
 {
 	fp_dbg("result %d", result);
 	BUG_ON(dev->state != DEV_STATE_IDENTIFYING
@@ -403,7 +403,7 @@ API_EXPORTED int fp_async_identify_stop(struct fp_dev *dev,
 }
 
 /* Drivers call this when identification has stopped */
-void fpi_drvcb_identify_stopped(struct fp_dev *dev)
+API_INTERNAL void fpi_drvcb_identify_stopped(struct fp_dev *dev)
 {
 	fp_dbg("");
 	BUG_ON(dev->state != DEV_STATE_IDENTIFY_STOPPING);

@@ -89,8 +89,8 @@ static int timeout_sort_fn(gconstpointer _a, gconstpointer _b)
 /* A timeout is the asynchronous equivalent of sleeping. You create a timeout
  * saying that you'd like to have a function invoked at a certain time in
  * the future. */
-struct fpi_timeout *fpi_timeout_add(unsigned int msec, fpi_timeout_fn callback,
-	void *data)
+API_INTERNAL struct fpi_timeout *fpi_timeout_add(unsigned int msec,
+		fpi_timeout_fn callback, void *data)
 {
 	struct timespec ts;
 	struct timeval add_msec;
@@ -122,7 +122,7 @@ struct fpi_timeout *fpi_timeout_add(unsigned int msec, fpi_timeout_fn callback,
 	return timeout;
 }
 
-void fpi_timeout_cancel(struct fpi_timeout *timeout)
+API_INTERNAL void fpi_timeout_cancel(struct fpi_timeout *timeout)
 {
 	fp_dbg("");
 	active_timers = g_slist_remove(active_timers, timeout);
@@ -346,12 +346,12 @@ static void remove_pollfd(int fd, void *user_data)
 		fd_removed_cb(fd);
 }
 
-void fpi_poll_init(void)
+API_INTERNAL void fpi_poll_init(void)
 {
 	libusb_set_pollfd_notifiers(fpi_usb_ctx, add_pollfd, remove_pollfd, NULL);
 }
 
-void fpi_poll_exit(void)
+API_INTERNAL void fpi_poll_exit(void)
 {
 	g_slist_free(active_timers);
 	active_timers = NULL;

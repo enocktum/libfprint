@@ -45,7 +45,7 @@
  * natural upright orientation.
  */
 
-struct fp_img *fpi_img_new(size_t length)
+API_INTERNAL struct fp_img *fpi_img_new(size_t length)
 {
 	struct fp_img *img = g_malloc(sizeof(*img) + length);
 	memset(img, 0, sizeof(*img));
@@ -54,7 +54,7 @@ struct fp_img *fpi_img_new(size_t length)
 	return img;
 }
 
-struct fp_img *fpi_img_new_for_imgdev(struct fp_img_dev *imgdev)
+API_INTERNAL struct fp_img *fpi_img_new_for_imgdev(struct fp_img_dev *imgdev)
 {
 	struct fp_img_driver *imgdrv = fpi_driver_to_img_driver(imgdev->dev->drv);
 	int width = imgdrv->img_width;
@@ -65,7 +65,7 @@ struct fp_img *fpi_img_new_for_imgdev(struct fp_img_dev *imgdev)
 	return img;
 }
 
-gboolean fpi_img_is_sane(struct fp_img *img)
+API_INTERNAL gboolean fpi_img_is_sane(struct fp_img *img)
 {
 	/* basic checks */
 	if (!img->length || !img->width || !img->height)
@@ -78,7 +78,7 @@ gboolean fpi_img_is_sane(struct fp_img *img)
 	return TRUE;
 }
 
-struct fp_img *fpi_img_resize(struct fp_img *img, size_t newsize)
+API_INTERNAL struct fp_img *fpi_img_resize(struct fp_img *img, size_t newsize)
 {
 	return g_realloc(img, sizeof(*img) + newsize);
 }
@@ -268,7 +268,7 @@ static void minutiae_to_xyt(struct fp_minutiae *minutiae, int bwidth,
 	xyt->nrows = nmin;
 }
 
-int fpi_img_detect_minutiae(struct fp_img *img)
+API_INTERNAL int fpi_img_detect_minutiae(struct fp_img *img)
 {
 	struct fp_minutiae *minutiae;
 	int r;
@@ -310,8 +310,8 @@ int fpi_img_detect_minutiae(struct fp_img *img)
 	return minutiae->num;
 }
 
-int fpi_img_to_print_data(struct fp_img_dev *imgdev, struct fp_img *img,
-	struct fp_print_data **ret)
+API_INTERNAL int fpi_img_to_print_data(struct fp_img_dev *imgdev,
+		struct fp_img *img, struct fp_print_data **ret)
 {
 	struct fp_print_data *print;
 	int r;
@@ -340,7 +340,7 @@ int fpi_img_to_print_data(struct fp_img_dev *imgdev, struct fp_img *img,
 	return 0;
 }
 
-int fpi_img_compare_print_data(struct fp_print_data *enrolled_print,
+API_INTERNAL int fpi_img_compare_print_data(struct fp_print_data *enrolled_print,
 	struct fp_print_data *new_print)
 {
 	struct xyt_struct *gstruct = (struct xyt_struct *) enrolled_print->data;
@@ -364,7 +364,7 @@ int fpi_img_compare_print_data(struct fp_print_data *enrolled_print,
 	return r;
 }
 
-int fpi_img_compare_print_data_to_gallery(struct fp_print_data *print,
+API_INTERNAL int fpi_img_compare_print_data_to_gallery(struct fp_print_data *print,
 	struct fp_print_data **gallery, int match_threshold, size_t *match_offset)
 {
 	struct xyt_struct *pstruct = (struct xyt_struct *) print->data;

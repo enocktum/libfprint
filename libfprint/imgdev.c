@@ -53,7 +53,8 @@ err:
 	return r;
 }
 
-void fpi_imgdev_open_complete(struct fp_img_dev *imgdev, int status)
+API_INTERNAL void fpi_imgdev_open_complete(struct fp_img_dev *imgdev,
+		int status)
 {
 	fpi_drvcb_open_complete(imgdev->dev, status);
 }
@@ -69,7 +70,7 @@ static void img_dev_close(struct fp_dev *dev)
 		fpi_drvcb_close_complete(dev);
 }
 
-void fpi_imgdev_close_complete(struct fp_img_dev *imgdev)
+API_INTERNAL void fpi_imgdev_close_complete(struct fp_img_dev *imgdev)
 {
 	fpi_drvcb_close_complete(imgdev->dev);
 	g_free(imgdev);
@@ -116,7 +117,7 @@ static int sanitize_image(struct fp_img_dev *imgdev, struct fp_img **_img)
 	return 0;
 }
 
-void fpi_imgdev_report_finger_status(struct fp_img_dev *imgdev,
+API_INTERNAL void fpi_imgdev_report_finger_status(struct fp_img_dev *imgdev,
 	gboolean present)
 {
 	int r = imgdev->action_result;
@@ -203,7 +204,8 @@ static void identify_process_img(struct fp_img_dev *imgdev)
 	imgdev->identify_match_offset = match_offset;
 }
 
-void fpi_imgdev_image_captured(struct fp_img_dev *imgdev, struct fp_img *img)
+API_INTERNAL void fpi_imgdev_image_captured(struct fp_img_dev *imgdev,
+		struct fp_img *img)
 {
 	struct fp_print_data *print;
 	int r;
@@ -263,7 +265,7 @@ next_state:
 	dev_change_state(imgdev, IMGDEV_STATE_AWAIT_FINGER_OFF);
 }
 
-void fpi_imgdev_session_error(struct fp_img_dev *imgdev, int error)
+API_INTERNAL void fpi_imgdev_session_error(struct fp_img_dev *imgdev, int error)
 {
 	fp_dbg("error %d", error);
 	BUG_ON(error == 0);
@@ -283,7 +285,8 @@ void fpi_imgdev_session_error(struct fp_img_dev *imgdev, int error)
 	}
 }
 
-void fpi_imgdev_activate_complete(struct fp_img_dev *imgdev, int status)
+API_INTERNAL void fpi_imgdev_activate_complete(struct fp_img_dev *imgdev,
+		int status)
 {
 	fp_dbg("status %d", status);
 
@@ -308,7 +311,7 @@ void fpi_imgdev_activate_complete(struct fp_img_dev *imgdev, int status)
 	}
 }
 
-void fpi_imgdev_deactivate_complete(struct fp_img_dev *imgdev)
+API_INTERNAL void fpi_imgdev_deactivate_complete(struct fp_img_dev *imgdev)
 {
 	fp_dbg("");
 
@@ -331,7 +334,7 @@ void fpi_imgdev_deactivate_complete(struct fp_img_dev *imgdev)
 	imgdev->action_state = 0;
 }
 
-int fpi_imgdev_get_img_width(struct fp_img_dev *imgdev)
+API_INTERNAL int fpi_imgdev_get_img_width(struct fp_img_dev *imgdev)
 {
 	struct fp_driver *drv = imgdev->dev->drv;
 	struct fp_img_driver *imgdrv = fpi_driver_to_img_driver(drv);
@@ -343,7 +346,7 @@ int fpi_imgdev_get_img_width(struct fp_img_dev *imgdev)
 	return width;
 }
 
-int fpi_imgdev_get_img_height(struct fp_img_dev *imgdev)
+API_INTERNAL int fpi_imgdev_get_img_height(struct fp_img_dev *imgdev)
 {
 	struct fp_driver *drv = imgdev->dev->drv;
 	struct fp_img_driver *imgdrv = fpi_driver_to_img_driver(drv);
@@ -443,7 +446,7 @@ static int img_dev_identify_stop(struct fp_dev *dev, gboolean iterating)
 	return 0;
 }
 
-void fpi_img_driver_setup(struct fp_img_driver *idriver)
+API_INTERNAL void fpi_img_driver_setup(struct fp_img_driver *idriver)
 {
 	idriver->driver.type = DRIVER_IMAGING;
 	idriver->driver.open = img_dev_open;

@@ -107,7 +107,8 @@ static struct fp_print_data *print_data_new(uint16_t driver_id,
 	return data;
 }
 
-struct fp_print_data *fpi_print_data_new(struct fp_dev *dev, size_t length)
+API_INTERNAL struct fp_print_data *fpi_print_data_new(struct fp_dev *dev,
+					size_t length)
 {
 	return print_data_new(dev->drv->id, dev->devtype,
 		fpi_driver_get_data_type(dev->drv), length);
@@ -269,9 +270,10 @@ API_EXPORTED int fp_print_data_save(struct fp_print_data *data,
 	return 0;
 }
 
-gboolean fpi_print_data_compatible(uint16_t driver_id1, uint32_t devtype1,
-	enum fp_print_data_type type1, uint16_t driver_id2, uint32_t devtype2,
-	enum fp_print_data_type type2)
+API_INTERNAL gboolean fpi_print_data_compatible(uint16_t driver_id1,
+		uint32_t devtype1, enum fp_print_data_type type1,
+		uint16_t driver_id2, uint32_t devtype2,
+		enum fp_print_data_type type2)
 {
 	if (driver_id1 != driver_id2) {
 		fp_dbg("driver ID mismatch: %02x vs %02x", driver_id1, driver_id2);

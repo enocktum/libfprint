@@ -276,6 +276,8 @@ extern libusb_context *fpi_usb_ctx;
 extern GSList *opened_devices;
 
 void fpi_img_driver_setup(struct fp_img_driver *idriver);
+void register_driver(struct fp_driver *drv);
+void unregister_driver(struct fp_driver *drv);
 
 #define fpi_driver_to_img_driver(drv) \
 	container_of((drv), struct fp_img_driver, driver)

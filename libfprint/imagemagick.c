@@ -22,7 +22,8 @@
 
 #include "fp_internal.h"
 
-struct fp_img *fpi_im_resize(struct fp_img *img, unsigned int factor)
+API_INTERNAL struct fp_img *fpi_im_resize(struct fp_img *img,
+						unsigned int factor)
 {
 	Image *mimg;
 	Image *resized;

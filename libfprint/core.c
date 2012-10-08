@@ -281,7 +281,7 @@ GSList *opened_devices = NULL;
 
 static GSList *registered_drivers = NULL;
 
-void fpi_log(enum fpi_log_level level, const char *component,
+API_INTERNAL void fpi_log(enum fpi_log_level level, const char *component,
 	const char *function, const char *format, ...)
 {
 	va_list args;
@@ -329,7 +329,7 @@ void fpi_log(enum fpi_log_level level, const char *component,
 	fprintf(stream, "\n");
 }
 
-static void register_driver(struct fp_driver *drv)
+API_INTERNAL void register_driver(struct fp_driver *drv)
 {
 	if (drv->id == 0) {
 		fp_err("not registering driver %s: driver ID is 0", drv->name);
@@ -337,6 +337,12 @@ static void register_driver(struct fp_driver *drv)
 	}
 	registered_drivers = g_slist_prepend(registered_drivers, (gpointer) drv);
 	fp_dbg("registered driver %s", drv->name);
+}
+
+API_INTERNAL void unregister_driver(struct fp_driver *drv)
+{
+	registered_drivers = g_slist_remove(registered_drivers, (gpointer) drv);
+	fp_dbg("unregistered driver %s", drv->name);
 }
 
 static struct fp_driver * const primitive_drivers[] = {
@@ -592,7 +598,7 @@ API_EXPORTED uint32_t fp_dscv_dev_get_devtype(struct fp_dscv_dev *dev)
 	return dev->devtype;
 }
 
-enum fp_print_data_type fpi_driver_get_data_type(struct fp_driver *drv)
+API_INTERNAL enum fp_print_data_type fpi_driver_get_data_type(struct fp_driver *drv)
 {
 	switch (drv->type) {
 	case DRIVER_PRIMITIVE:
