@@ -345,6 +345,8 @@ API_INTERNAL void unregister_driver(struct fp_driver *drv)
 	fp_dbg("unregistered driver %s", drv->name);
 }
 
+#ifndef ENABLE_DYNAMIC_DRIVERS
+
 static struct fp_driver * const primitive_drivers[] = {
 #ifdef ENABLE_UPEKTS
 	&upekts_driver,
@@ -420,6 +422,7 @@ API_EXPORTED struct fp_driver **fprint_get_drivers (void)
 
 	return (struct fp_driver **) g_ptr_array_free (array, FALSE);
 }
+#endif /* ENABLE_DYNAMIC_DRIVERS */
 
 static struct fp_driver *find_supporting_driver(libusb_device *udev,
 	const struct usb_id **usb_id, uint32_t *devtype)
@@ -946,7 +949,10 @@ API_EXPORTED int fp_init(void)
 		}
 	}
 
+#ifndef ENABLE_DYNAMIC_DRIVERS
 	register_drivers();
+#endif /* ENABLE_DYNAMIC_DRIVERS */
+
 	fpi_poll_init();
 	return 0;
 }

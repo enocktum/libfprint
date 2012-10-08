@@ -235,6 +235,8 @@ struct fp_img_driver {
 	void (*deactivate)(struct fp_img_dev *dev);
 };
 
+#ifndef ENABLE_DYNAMIC_DRIVERS
+
 #ifdef ENABLE_UPEKTS
 extern struct fp_driver upekts_driver;
 #endif
@@ -271,6 +273,8 @@ extern struct fp_img_driver vfs101_driver;
 #ifdef ENABLE_VFS301
 extern struct fp_img_driver vfs301_driver;
 #endif
+
+#endif /* ENABLE_DYNAMIC_DRIVERS */
 
 extern libusb_context *fpi_usb_ctx;
 extern GSList *opened_devices;
