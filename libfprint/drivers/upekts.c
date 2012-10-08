@@ -34,6 +34,7 @@
 #include <libusb.h>
 
 #include <fp_internal.h>
+#include <module.h>
 
 #define EP_IN (1 | LIBUSB_ENDPOINT_IN)
 #define EP_OUT (2 | LIBUSB_ENDPOINT_OUT)
@@ -1477,3 +1478,18 @@ struct fp_driver upekts_driver = {
 	.verify_stop = verify_stop,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_upekts(void)
+{
+	register_driver(&upekts_driver);
+	return 0;
+}
+
+static void exit_upekts(void)
+{
+	unregister_driver(&upekts_driver);
+}
+
+module_init(init_upekts)
+module_exit(exit_upekts)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

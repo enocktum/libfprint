@@ -24,6 +24,7 @@
 #define FP_COMPONENT "vfs101"
 
 #include <fp_internal.h>
+#include <module.h>
 
 /* Input-Output usb endpoint */
 #define EP_IN(n)	(n | LIBUSB_ENDPOINT_IN)
@@ -1568,3 +1569,21 @@ struct fp_img_driver vfs101_driver =
 	.activate = dev_activate,
 	.deactivate = dev_deactivate,
 };
+
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_vfs101(void)
+{
+	register_driver(&vfs101_driver.driver);
+	fpi_img_driver_setup(&vfs101_driver);
+	return 0;
+}
+
+static void exit_vfs101(void)
+{
+	fp_dbg("VFS 101 exiting..\n");
+	unregister_driver(&vfs101_driver.driver);
+}
+
+module_init(init_vfs101)
+module_exit(exit_vfs101)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

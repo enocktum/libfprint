@@ -33,6 +33,7 @@
 #include <unistd.h>
 
 #include <fp_internal.h>
+#include <module.h>
 
 /************************** GENERIC STUFF *************************************/
 
@@ -304,3 +305,20 @@ struct fp_img_driver vfs301_driver =
 	.activate = dev_activate,
 	.deactivate = dev_deactivate,
 };
+
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_vfs301(void)
+{
+	register_driver(&vfs301_driver.driver);
+	fpi_img_driver_setup(&vfs301_driver);
+	return 0;
+}
+
+static void exit_vfs301(void)
+{
+	unregister_driver(&vfs301_driver.driver);
+}
+
+module_init(init_vfs301)
+module_exit(exit_vfs301)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

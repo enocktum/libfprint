@@ -24,8 +24,10 @@
 #include <glib.h>
 #include <libusb.h>
 
+#include <config.h>
 #include <aeslib.h>
 #include <fp_internal.h>
+#include <module.h>
 
 #define CTRL_TIMEOUT	1000
 #define EP_IN			(1 | LIBUSB_ENDPOINT_IN)
@@ -268,3 +270,19 @@ struct fp_img_driver aes4000_driver = {
 	.deactivate = dev_deactivate,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_aes4000(void)
+{
+	register_driver(&aes4000_driver.driver);
+	fpi_img_driver_setup(&aes4000_driver);
+	return 0;
+}
+
+static void exit_aes4000(void)
+{
+	unregister_driver(&aes4000_driver.driver);
+}
+
+module_init(init_aes4000)
+module_exit(exit_aes4000)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

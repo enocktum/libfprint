@@ -28,7 +28,9 @@
 #include <glib.h>
 #include <libusb.h>
 
+#include <config.h>
 #include <fp_internal.h>
+#include <module.h>
 
 #define CTRL_TIMEOUT	1000
 #define IMG_WIDTH 288
@@ -1289,3 +1291,19 @@ struct fp_img_driver upeksonly_driver = {
 	.deactivate = dev_deactivate,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_upeksonly(void)
+{
+	register_driver(&upeksonly_driver.driver);
+	fpi_img_driver_setup(&upeksonly_driver);
+	return 0;
+}
+
+static void exit_upeksonly(void)
+{
+	unregister_driver(&upeksonly_driver.driver);
+}
+
+module_init(init_upeksonly)
+module_exit(exit_upeksonly)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

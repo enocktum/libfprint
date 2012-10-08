@@ -29,8 +29,11 @@
 
 #include <libusb.h>
 
+#include <config.h>
+
 #include <aeslib.h>
 #include <fp_internal.h>
+#include <module.h>
 
 static void start_capture(struct fp_img_dev *dev);
 static void complete_deactivation(struct fp_img_dev *dev);
@@ -462,7 +465,8 @@ out:
 }
 
 
-static void finger_det_none_cb(struct fp_img_dev *dev, int result, void *user_data) {
+static void finger_det_none_cb(struct fp_img_dev *dev, int result, void *user_data)
+{
 	fpi_imgdev_report_finger_status(dev, FALSE);
 	start_finger_detection(dev);
 }
@@ -1128,3 +1132,19 @@ struct fp_img_driver aes1610_driver = {
 	.deactivate = dev_deactivate,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_aes1610(void)
+{
+	register_driver(&aes1610_driver.driver);
+	fpi_img_driver_setup(&aes1610_driver);
+	return 0;
+}
+
+static void exit_aes1610(void)
+{
+	unregister_driver(&aes1610_driver.driver);
+}
+
+module_init(init_aes1610)
+module_exit(exit_aes1610)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

@@ -30,6 +30,8 @@
 
 #include <aeslib.h>
 #include <fp_internal.h>
+#include <module.h>
+
 #include "aes2501.h"
 
 static void start_capture(struct fp_img_dev *dev);
@@ -961,3 +963,19 @@ struct fp_img_driver aes2501_driver = {
 	.deactivate = dev_deactivate,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_aes2501(void)
+{
+	register_driver(&aes2501_driver.driver);
+	fpi_img_driver_setup(&aes2501_driver);
+	return 0;
+}
+
+static void exit_aes2501(void)
+{
+	unregister_driver(&aes2501_driver.driver);
+}
+
+module_init(init_aes2501)
+module_exit(exit_aes2501)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

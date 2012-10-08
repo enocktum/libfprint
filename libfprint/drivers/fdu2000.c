@@ -26,6 +26,8 @@
 #define FP_COMPONENT "fdu2000"
 #include <fp_internal.h>
 
+#include <module.h>
+
 #ifndef HAVE_MEMMEM
 gpointer
 memmem(const gpointer haystack, size_t haystack_len, const gpointer needle, size_t needle_len) {
@@ -319,3 +321,20 @@ struct fp_img_driver fdu2000_driver = {
 	.exit = dev_exit,
 	.capture = capture,
 };
+
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_fdu2000(void)
+{
+	register_driver(&fdu2000_driver.driver);
+	fpi_img_driver_setup(&fdu2000_driver);
+	return 0;
+}
+
+static void exit_fdu2000(void)
+{
+	unregister_driver(&fdu2000_driver.driver);
+}
+
+module_init(init_fdu2000)
+module_exit(exit_fdu2000)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

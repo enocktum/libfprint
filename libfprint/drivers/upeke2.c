@@ -35,7 +35,9 @@
 #include <glib.h>
 #include <libusb.h>
 
+#include <config.h>
 #include <fp_internal.h>
+#include <module.h>
 
 #define EP_IN (1 | LIBUSB_ENDPOINT_IN)
 #define EP_OUT (2 | LIBUSB_ENDPOINT_OUT)
@@ -1470,3 +1472,18 @@ struct fp_driver upeke2_driver = {
 	.verify_stop = verify_stop,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_upeke2(void)
+{
+	register_driver(&upeke2_driver);
+	return 0;
+}
+
+void exit_upeke2(void)
+{
+	unregister_driver(&upeke2_driver);
+}
+
+module_init(init_upeke2)
+module_exit(exit_upeke2)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

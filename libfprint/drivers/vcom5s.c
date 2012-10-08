@@ -33,6 +33,7 @@
 #include <libusb.h>
 
 #include <fp_internal.h>
+#include <module.h>
 
 #define CTRL_IN 0xc0
 #define CTRL_OUT 0x40
@@ -384,3 +385,19 @@ struct fp_img_driver vcom5s_driver = {
 	.deactivate = dev_deactivate,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_vcom5s(void)
+{
+	register_driver(&vcom5s_driver.driver);
+	fpi_img_driver_setup(&vcom5s_driver);
+	return 0;
+}
+
+static void exit_vcom5s(void)
+{
+	unregister_driver(&vcom5s_driver.driver);
+}
+
+module_init(init_vcom5s)
+module_exit(exit_vcom5s)
+#endif /* ENABLE_DYNAMIC_DRIVERS */

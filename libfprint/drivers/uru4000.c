@@ -28,6 +28,7 @@
 #include <libusb.h>
 
 #include <fp_internal.h>
+#include <module.h>
 
 #define EP_INTR			(1 | LIBUSB_ENDPOINT_IN)
 #define EP_DATA			(2 | LIBUSB_ENDPOINT_IN)
@@ -1293,3 +1294,20 @@ struct fp_img_driver uru4000_driver = {
 	.change_state = dev_change_state,
 };
 
+#ifdef ENABLE_DYNAMIC_DRIVERS
+static int init_uru4000(void)
+{
+	register_driver(&uru4000_driver.driver);
+	fpi_img_driver_setup(&uru4000_driver);
+	return 0;
+}
+
+static void exit_uru4000(void)
+{
+	fp_dbg("URU4000 exiting..\n");
+	unregister_driver(&uru4000_driver.driver);
+}
+
+module_init(init_uru4000)
+module_exit(exit_uru4000)
+#endif /* ENABLE_DYNAMIC_DRIVERS */
