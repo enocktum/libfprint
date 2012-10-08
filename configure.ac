@@ -188,6 +188,15 @@ AC_ARG_ENABLE([x11-examples-build], [AS_HELP_STRING([--enable-x11-examples-build
 	[build_x11_examples='no'])
 AM_CONDITIONAL([BUILD_X11_EXAMPLES], [test "x$build_x11_examples" != "xno"])
 
+# Dynamic drivers
+AC_ARG_ENABLE([dynamic-drivers], [AS_HELP_STRING([--enable-dynamic-drivers],
+	[Build drivers as shared objects which can be loaded dynamically (default n)])],
+	[dynamic_drivers=$enableval],
+	[dynamic_drivers='no'])
+if test "x$dynamic_drivers" != "xno"; then
+	AC_DEFINE([ENABLE_DYNAMIC_DRIVERS], 1, [Drivers as shared objects])
+fi
+AM_CONDITIONAL([ENABLE_DYNAMIC_DRIVERS], [test "x$dynamic_drivers" != "xno"])
 
 if test "x$build_x11_examples" != "xno"; then
 	# check for Xv extensions
@@ -316,6 +325,12 @@ else
 	AC_MSG_NOTICE([   aeslib helper functions disabled])
 fi
 
-AC_CONFIG_FILES([libfprint.pc] [Makefile] [libfprint/Makefile] [examples/Makefile] [doc/Makefile])
+if test x$dynamic_drivers != xno ; then
+	AC_MSG_NOTICE([** drivers will be built as shared object modules])
+else
+	AC_MSG_NOTICE([   drivers will be built statically])
+fi
+
+AC_CONFIG_FILES([libfprint.pc] [Makefile] [libfprint/Makefile] [libfprint/drivers/Makefile] [examples/Makefile] [doc/Makefile])
 AC_OUTPUT
 

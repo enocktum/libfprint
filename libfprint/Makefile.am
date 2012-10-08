@@ -2,6 +2,7 @@ lib_LTLIBRARIES = libfprint.la
 noinst_PROGRAMS = fprint-list-udev-rules
 MOSTLYCLEANFILES = $(udev_rules_DATA)
 
+
 UPEKE2_SRC = drivers/upeke2.c
 UPEKTS_SRC = drivers/upekts.c
 UPEKTC_SRC = drivers/upektc.c
@@ -79,7 +80,7 @@ libfprint_la_LIBADD = -lm $(LIBUSB_LIBS) $(GLIB_LIBS) $(CRYPTO_LIBS)
 
 fprint_list_udev_rules_SOURCES = fprint-list-udev-rules.c
 fprint_list_udev_rules_CFLAGS = -fvisibility=hidden -I$(srcdir)/nbis/include $(LIBUSB_CFLAGS) $(GLIB_CFLAGS) $(IMAGEMAGICK_CFLAGS) $(CRYPTO_CFLAGS) $(AM_CFLAGS)
-fprint_list_udev_rules_LDADD = $(builddir)/libfprint.la
+fprint_list_udev_rules_LDADD = $(builddir)/libfprint.la $(GLIB_LIBS)
 
 udev_rules_DATA = 60-fprint-autosuspend.rules
 
@@ -162,8 +163,22 @@ libfprint_la_SOURCES =	\
 	imgdev.c	\
 	poll.c		\
 	sync.c		\
-	$(DRIVER_SRC)	\
 	$(OTHER_SRC)	\
 	$(NBIS_SRC)
 
+if ENABLE_DYNAMIC_DRIVERS
+libfprint_la_SOURCES += module.c
+else
+libfprint_la_SOURCES += $(DRIVER_SRC)
+endif
+
 pkginclude_HEADERS = fprint.h
+
+# Force the start of build from libfprint.
+# This is required if the drivers are built as shared objects since they
+# depend on libfprint.la.
+SUBDIRS = .
+
+if ENABLE_DYNAMIC_DRIVERS
+SUBDIRS += drivers
+endif
