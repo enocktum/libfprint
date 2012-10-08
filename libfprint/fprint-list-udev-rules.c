@@ -85,6 +85,7 @@ int main (int argc, char **argv)
     struct fp_driver **list;
     guint i;
 
+#ifndef ENABLE_DYNAMIC_DRIVERS
     list = fprint_get_drivers ();
 
     printed = g_hash_table_new_full (g_str_hash, g_str_equal, g_free, NULL);
@@ -96,6 +97,7 @@ int main (int argc, char **argv)
     print_driver (&whitelist);
 
     g_hash_table_destroy (printed);
+#endif /* ENABLE_DYNAMIC_DRIVERS */
 
     return 0;
 }
